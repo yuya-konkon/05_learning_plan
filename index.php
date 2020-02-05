@@ -16,24 +16,25 @@ $notyet_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 新規タスクの追加
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $title = $_POST['title'];
-  $dudate = $_POST['due_date'];
+  $due_date = $_POST['due_date'];
 
   $errors = [];
-
+  // foreach (配列変数 as キー変数 => 値変数) {
+  //   実行する処理1;
   // 入力がなければエラー
-
-  if ($title == '') {
-    $errors['title'] = 'タスク名を入力してください';
-  }
-
+  // if ($title == '') {
+  //   $errors['title'] = 'タスク名を入力してください';
+  // }
+  //   実行する処理2;
   // 期限が設定されていなければエラー
-  if ($dudate == "") {
-    $errors['$dudate'];
+  if ($due_date == '') {
+    $errors['due_date'] = '期限を設定してください';
   }
+  // }
 
   // エラーがなければ実行
   if (empty($errors)) {
-    $sql = "insert into plans (title, due_date, created_at, updated_at) values (:title, now(),now()) ";
+    $sql = "insert into plans (title, due_date, created_at, updated_at) values (:title, YYYY-MM-DD, now(), now())";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(":title", $title);
     $stmt->execute();
@@ -61,24 +62,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <p>
     <form action="" method="post">
-      学習内容: <input type="text"><br>
-      期限日: <input type="date" name="">
+      学習内容: <input type="text" name="title"><br>
+      期限日: <input type="date" name="due_date">
       <input type="submit" value="追加"><br>
-      <span class="expired">
-        <ul style="color:red;">
-          <li>
-            <?php echo h($errors ['title']) ?>
-          </li>
-        </ul>
+      <span style="color:red">
+        <?php echo h($errors ['due_date']) ?>
       </span>
     </form>
   </p>
+
 
   <h2>未達成</h2>
   <ul>
     <?php foreach ($notyet_plans as $plan) : ?>
       <li>
         <?php echo h($plan['title']); ?>
+        <?php echo '･･･完了期限:' . h(date('Y/m/d', strtotime($plan['due_date']))); ?>
       </li>
     <?php endforeach; ?>
   </ul>
