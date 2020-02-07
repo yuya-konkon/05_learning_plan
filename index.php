@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // foreach (配列変数 as キー変数 => 値変数) {
   //   実行する処理1;
   // 入力がなければエラー
-  // if ($title == '') {
-  //   $errors['title'] = 'タスク名を入力してください';
-  // }
+  if ($title == '') {
+    $errors['title'] = 'タスク名を入力してください';
+  }
   //   実行する処理2;
   // 期限が設定されていなければエラー
   if ($due_date == '') {
@@ -34,9 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // エラーがなければ実行
   if (empty($errors)) {
-    $sql = "insert into plans (title, due_date, created_at, updated_at) values (:title, YYYY-MM-DD, now(), now())";
+    $sql = "insert into plans (title, due_date, created_at, updated_at) values (:title, due_date, now(), now())";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(":title", $title);
+    $stmt->bindParam(":due_date", $due_date);
     $stmt->execute();
 
     header('Location: index.php');
