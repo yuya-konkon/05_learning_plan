@@ -3,10 +3,10 @@
 require_once('config.php');
 require_once('functions.php');
 
+$dbh = connectDB();
+
 // 受け取ったレコードのid
 $id = $_GET['id'];
-
-$dbh = connectDB();
 
 $sql = "select * from plans where id = :id";
 $stmt = $dbh->prepare($sql);
@@ -16,11 +16,13 @@ $stmt->execute();
 $plan = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
+// 編集
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $title = $_POST['title'];
   $due_date = $_POST['due_date'];
 
   $errors = [];
+  // バリデーション
   if ($title == '') {
     $errors['title'] = 'タスク名を入力してください。';
   }
@@ -37,15 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['due_date'] = '期限が変更されていません。';
   }
 
-  // エラーがなければ実行
+
+  // エラーが1つもなければレコードを更新
   if (empty($errors)) {
-    $sql = "update plans set = :title, :due_date, updated_at = now() where id = id = :id";
+    $sql = "update plans set title = :title, updated_at = now() where id = id";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(":title", $title);
     $stmt->bindParam(":due_date", $due_date);
     $stmt->bindParam(":id", $id);
     $stmt->execute();
-
     header('Location: index.php');
     exit;
   }
