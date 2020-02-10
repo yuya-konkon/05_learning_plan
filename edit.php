@@ -15,6 +15,7 @@ $stmt->execute();
 
 $plan = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// var_dump($_SERVER);
 
 // 編集
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($due_date == $plan['due_date']) {
     $errors['due_date'] = '期限が変更されていません。';
   }
-
-
+  // echo '通りました';
+  // var_dump($errors);
   // エラーが1つもなければレコードを更新
   if (empty($errors)) {
-    $sql = "update plans set title = :title, updated_at = now() where id = id";
+    $sql = "update plans set title = :title, due_date = :due_date, updated_at = now() where id = :id";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(":title", $title);
     $stmt->bindParam(":due_date", $due_date);
@@ -68,16 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <h1>編集</h1>
   <p>
-    学習内容: <input type="text" name="title" value="<?php echo h($plan['title']); ?>">
-    期限日: <input type="date" name="due_date">
-    <input type="submit" value="編集">
-    <?php if ($errors > 0) : ?>
-      <ul style="color:red;">
-        <?php foreach ($errors as $key => $value) : ?>
-          <li><?php echo h($value); ?></li>
-        <?php endforeach; ?>
-      </ul>
-    <?php endif; ?>
+    <form action="" method="post">
+      学習内容: <input type="text" name="title" value="<?php echo h($plan['title']); ?>">
+      期限日: <input type="date" name="due_date">
+      <input type="submit" value="編集">
+      <?php if ($errors > 0) : ?>
+        <ul style="color:red;">
+          <?php foreach ($errors as $key => $value) : ?>
+            <li><?php echo h($value); ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
     </form>
   </p>
 </body>

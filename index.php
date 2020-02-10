@@ -6,7 +6,7 @@ require_once('functions.php');
 $dbh = connectDB();
 
 // 未達成レコードの取得
-$sql = "select * from plans where status = 'notyet'";
+$sql = "select * from plans where status = 'notyet' ORDER BY due_date ASC";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $notyet_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
