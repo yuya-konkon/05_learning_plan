@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <h2>未達成</h2>
   <ul>
     <?php foreach ($notyet_plans as $plan) : ?>
-      <?php if ($plan['due_date'] < date("Y-m-d")) : ?>
+      <?php if ($plan['due_date'] <= date("Y-m-d")) : ?>
         <li class="expired">
         <?php else : ?>
         <li>
