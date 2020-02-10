@@ -12,7 +12,7 @@ $stmt->execute();
 $notyet_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 完了済みのレコードを取得
-$sql2 = "select * from plans where status = 'done'";
+$sql2 = "select * from plans where status = 'done' ORDER BY due_date ASC";
 $stmt = $dbh->prepare($sql2);
 $stmt->execute();
 $done_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
