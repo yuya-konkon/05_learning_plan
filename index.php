@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li>
       <?php endif; ?>
         <a href="done.php?id=<?php echo h($plan['id']); ?>">[完了]</a>
-        <a href="edit.php?id=<?php echo h($plan['id']); ?>" target="_blank">編集]</a>
+        <a href="edit.php?id=<?php echo h($plan['id']); ?>" target="_blank">[編集]</a>
         <?php echo h($plan['title']); ?>
         <?php echo '･･･完了期限:' . h(date('Y/m/d', strtotime($plan['due_date']))); ?>
         </li>
