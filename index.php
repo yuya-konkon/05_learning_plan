@@ -11,6 +11,11 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $notyet_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// $today = new DateTime();
+// $today->setTimezone(new DateTimeZone('asia/tokyo'));
+
+// echo $today;
+
 // 完了済みのレコードを取得
 $sql2 = "select * from plans where status = 'done' ORDER BY due_date ASC";
 $stmt = $dbh->prepare($sql2);
@@ -65,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       学習内容: <input type="text" name="title"><br>
       期限日: <input type="date" name="due_date">
       <input type="submit" value="追加"><br>
-        <?php if ($errors > 0) : ?>
-          <ul style="color:red;">
-            <?php foreach ($errors as $key => $value) : ?>
-              <li><?php echo h($value); ?></li>
-            <?php endforeach; ?>
-          </ul>
-        <?php endif; ?>
+      <?php if ($errors > 0) : ?>
+        <ul style="color:red;">
+          <?php foreach ($errors as $key => $value) : ?>
+            <li><?php echo h($value); ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
     </form>
   </p>
 
@@ -79,24 +84,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <h2>未達成</h2>
   <ul>
     <?php foreach ($notyet_plans as $plan) : ?>
-      <li>
-        <a href="done.php?id=<?php echo h($plan['id']) ; ?>">[完了]</a>
-        <a href="edit.php?id=<?php echo h($plan['id']) ; ?>" target="_blank">[編集]</a>
+      <?php if ($plan['due_date'] < date("Y-m-d")) : ?>
+        <li class="expired">
+        <?php else : ?>
+        <li>
+        <?php endif; ?>
+        <a href="done.php?id=<?php echo h($plan['id']); ?>">[完了]</a>
+        <a href="edit.php?id=<?php echo h($plan['id']); ?>" target="_blank">編集]</a>
         <?php echo h($plan['title']); ?>
         <?php echo '･･･完了期限:' . h(date('Y/m/d', strtotime($plan['due_date']))); ?>
-      </li>
-    <?php endforeach; ?>
+        </li>
+      <?php endforeach; ?>
   </ul>
 
   <hr>
 
   <h2>達成済み</h2>
   <ul>
-  <?php foreach ($done_plans as $plan) : ?>
-    <li>
-      <?php echo h($plan['title']); ?>
-    </li>
-  <?php endforeach; ?>
+    <?php foreach ($done_plans as $plan) : ?>
+      <li>
+        <?php echo h($plan['title']); ?>
+      </li>
+    <?php endforeach; ?>
   </ul>
 
 </body>
