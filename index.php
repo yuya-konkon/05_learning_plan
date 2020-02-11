@@ -11,11 +11,6 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $notyet_plans = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// $today = new DateTime();
-// $today->setTimezone(new DateTimeZone('asia/tokyo'));
-
-// echo $today;
-
 // 完了済みのレコードを取得
 $sql2 = "select * from plans where status = 'done' ORDER BY due_date ASC";
 $stmt = $dbh->prepare($sql2);
@@ -71,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       期限日: <input type="date" name="due_date">
       <input type="submit" value="追加"><br>
       <?php if ($errors > 0) : ?>
-        <ul style="color:red;">
+        <ul class="errors">
           <?php foreach ($errors as $key => $value) : ?>
             <li><?php echo h($value); ?></li>
           <?php endforeach; ?>
